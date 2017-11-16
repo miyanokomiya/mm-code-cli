@@ -24,8 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
             serverProcess = null
         }
 
-        // const binPath = '~/.vscode/extensions/mm-code/mm-code'
-        const binPath = '/Users/komiyamatomoya/develop/vscode/mm-code/mm-code/mm-code'
+        const binPath = '~/.vscode/extensions/mm-code/mm-code'
+        // const binPath = '/Users/komiyamatomoya/develop/vscode/mm-code/mm-code/mm-code'
         serverProcess = child_process.exec(binPath, (error, stdout, stderror) => {
             // if (error) {
             //     vscode.window.showErrorMessage('MM failed to start server.')

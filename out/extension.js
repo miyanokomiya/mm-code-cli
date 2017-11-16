@@ -6,8 +6,6 @@ const vscode = require("vscode");
 const vscode_1 = require("vscode");
 const timers_1 = require("timers");
 const WebSocket = require('ws');
-const child_process = require("child_process");
-let serverProcess = null;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -17,40 +15,10 @@ function activate(context) {
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
     context.subscriptions.push(vscode.commands.registerCommand('extension.mmCodeStart', () => {
-        if (serverProcess) {
-            serverProcess.kill();
-            serverProcess = null;
-        }
-        const binPath = '~/.vscode/extensions/mm-code-cli/mm-code';
-        // const binPath = '/Users/komiyamatomoya/develop/vscode/mm-code/mm-code/mm-code'
-        serverProcess = child_process.exec(binPath, (error, stdout, stderror) => {
-            // if (error) {
-            //     vscode.window.showErrorMessage('MM failed to start server.')
-            //     if (serverProcess) {
-            //         serverProcess.kill()
-            //         serverProcess = null
-            //     }
-            // } else {
-            //     controller.startConnect()
-            //     vscode.window.showInformationMessage('MM started. using port:8080')
-            // }
-            // TODO 成功してもエラー判定になっている？
-            // サーバーはプロセス動き続けるのでコールバックにこない
-            // controller.startConnect()
-            // vscode.window.showInformationMessage('MM started. using port:8080')
-        });
-        // サーバ準備完了を測れないので適当に待つ
-        timers_1.setTimeout(() => {
-            controller.startConnect();
-        }, 3000);
-        vscode.window.showInformationMessage('MM started. using port:8090');
+        controller.startConnect();
     }));
     context.subscriptions.push(vscode.commands.registerCommand('extension.mmCodeStop', () => {
         controller.stopConnect();
-        if (serverProcess) {
-            serverProcess.kill();
-            serverProcess = null;
-        }
         vscode.window.showInformationMessage('MM stopped.');
     }));
 }
@@ -68,10 +36,6 @@ class WordCounterController {
     dispose() {
         this.stopConnect();
         this._statusBarItem.dispose();
-        if (serverProcess) {
-            serverProcess.kill();
-            serverProcess = null;
-        }
     }
     stopConnect() {
         if (this._client) {

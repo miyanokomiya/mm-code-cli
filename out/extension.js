@@ -21,7 +21,7 @@ function activate(context) {
             serverProcess.kill();
             serverProcess = null;
         }
-        const binPath = '~/.vscode/extensions/mm-code/mm-code';
+        const binPath = '~/.vscode/extensions/mm-code-cli/mm-code';
         // const binPath = '/Users/komiyamatomoya/develop/vscode/mm-code/mm-code/mm-code'
         serverProcess = child_process.exec(binPath, (error, stdout, stderror) => {
             // if (error) {
@@ -156,14 +156,16 @@ class WordCounterController {
     _putLine() {
         // アクティブなエディタを取得
         const editor = vscode_1.window.activeTextEditor;
-        const lineIndex = editor.selection.anchor.line;
-        const columnIndex = editor.selection.anchor.character;
-        const lineText = editor.document.lineAt(lineIndex).text;
-        this._client.send('line ' + JSON.stringify({
-            r: lineIndex,
-            c: columnIndex,
-            l: lineText
-        }));
+        if (editor) {
+            const lineIndex = editor.selection.anchor.line;
+            const columnIndex = editor.selection.anchor.character;
+            const lineText = editor.document.lineAt(lineIndex).text;
+            this._client.send('line ' + JSON.stringify({
+                r: lineIndex,
+                c: columnIndex,
+                l: lineText
+            }));
+        }
     }
     _onDidChangeTextDocument(e1) {
         const updates = [];
